@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Itodo } from "components/todo/TodoService";
+import { DatePicker } from "antd";
+import moment from "moment";
 
 const CircleButton = styled.button<{ open: boolean }>`
   background: #33bb77;
@@ -38,7 +40,7 @@ const InsertForm = styled.form`
 const Input = styled.input`
   padding: 12px;
   border: 1px solid #dddddd;
-  width: 100%;
+  width: 85%;
   outline: none;
   font-size: 21px;
   box-sizing: border-box;
@@ -62,22 +64,27 @@ const TodoCreate = ({
 }: TodoCreateProps) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-
+  const [deadline, setDeadline] = useState("");
+  const disabledDate = (current) => current && current < moment().endOf("day");
   const handleToggle = () => setOpen(!open);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setValue(e.target.value);
 
+  const handleDatePick = (date, dateString) => {
+    setDeadline(dateString);
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // 새로고침 방지
-
+    e.preventDefault();
+    if (!value || !deadline) return;
     createTodo({
       id: nextId,
       text: value,
-      done: false
+      done: false,
+      deadline
     });
     incrementNextId(); // nextId 하나 증가
 
-    setValue(""); // input 초기화
+    setValue("");
     setOpen(false); // open 닫기
   };
 
@@ -88,8 +95,13 @@ const TodoCreate = ({
           <Input
             autoFocus
             placeholder="What's need to be done?"
-            onChange={handleChange}
+            onChange={handleInputChange}
             value={value}
+          />
+          <DatePicker
+            onChange={handleDatePick}
+            size="large"
+            disabledDate={disabledDate}
           />
 
           <CircleButton onClick={handleToggle} open={open}>
