@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-
-const TodoHeadBlock = styled.div`
+const TodoHeadTimeBlock = styled.div``;
+const TodoHeadDateBlock = styled.div`
   display: flex;
   justify-content: center;
-  padding-top: 52px;
+  color: #119955;
+  font-size: 10px;
   padding-bottom: 24px;
   border-bottom: 3px solid #33bb77;
 `;
@@ -22,15 +23,30 @@ const DayText = styled.div`
 `;
 
 const TodoHead = () => {
-  //@TODO 현재 시간을 표시해야합니다.
-  const dayString = "Tuesday";
-  const dateString = "July 20, 2021";
+  const currentTime = new Date().getTime();
+  const [time, setTime] = useState(currentTime);
+  const today = new Intl.DateTimeFormat("en-GB", {
+    dateStyle: "full",
+    timeStyle: "short"
+  }).format(time);
+
+  const [day, date, month, year, , clock] = today.split(" ");
+
+  useEffect(() => {
+    let timer = setTimeout(() => setTime(time + 1000), 1000);
+    return () => clearTimeout(timer);
+  }, [time]);
 
   return (
-    <TodoHeadBlock>
-      <DayText>{dayString}</DayText>
-      <DateText>{dateString}</DateText>
-    </TodoHeadBlock>
+    <>
+      <TodoHeadTimeBlock>
+        <DateText>{clock}</DateText>
+      </TodoHeadTimeBlock>
+      <TodoHeadDateBlock>
+        <DayText>{day}</DayText>
+        <DateText>{month + " " + date + ", " + year}</DateText>
+      </TodoHeadDateBlock>
+    </>
   );
 };
 

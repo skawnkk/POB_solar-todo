@@ -1,10 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 
 export type Itodo = {
   id: number;
   text: string;
   done: boolean;
+  deadline: string;
 };
 
 let initialTodos: Itodo[] = [];
@@ -47,8 +47,8 @@ export const useTodo = () => {
 
   const loadData = () => {
     let data = localStorage.getItem("todos");
-    if (data === undefined) data = "";
-    initialTodos = JSON.parse(data!);
+    //if (data === undefined) data = ""; //이건 뭐지, 빈 배열이 아니라 undefined?
+    initialTodos = JSON.parse(data); //data!  (???)
     if (initialTodos && initialTodos.length >= 1) {
       incrementNextId();
     }
