@@ -43,6 +43,8 @@ const CheckCircle = styled.div<{ done: boolean }>`
 `;
 
 const Text = styled.div<{ done: boolean }>`
+  display: flex;
+  justify-content: space-between;
   flex: 1;
   font-size: 16px;
   color: #119955;
@@ -54,6 +56,10 @@ const Text = styled.div<{ done: boolean }>`
     `}
 `;
 
+const DeadLine = styled.div`
+  margin-right: 50px;
+`;
+
 interface TodoItemProps {
   toggleTodo: (id: number) => void;
   removeTodo: (id: number) => void;
@@ -61,17 +67,22 @@ interface TodoItemProps {
 }
 
 const TodoItem = ({ toggleTodo, removeTodo, todo }: TodoItemProps) => {
-  const done = false;
-  const handleToggle = () => {};
+  const { done } = todo;
+  const handleToggle = (id) => {
+    toggleTodo(id);
+  };
 
   const handleRemove = () => {};
 
   return (
     <TodoItemBlock>
-      <CheckCircle done={done} onClick={handleToggle}>
+      <CheckCircle done={done} onClick={() => handleToggle(todo.id)}>
         {done && <CheckOutlined />}
       </CheckCircle>
-      <Text done={done}>{todo.text}</Text>
+      <Text done={done}>
+        {todo.text}
+        <DeadLine>{todo.deadline}</DeadLine>
+      </Text>
       <Remove onClick={handleRemove}>
         <DeleteOutlined />
       </Remove>

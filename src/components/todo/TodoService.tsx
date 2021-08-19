@@ -11,6 +11,7 @@ let initialTodos: Itodo[] = [];
 
 export const useTodo = () => {
   const [todoState, setTodoState] = useState(initialTodos);
+
   var nextIdState = 0;
 
   useEffect(() => {
@@ -26,7 +27,10 @@ export const useTodo = () => {
   };
 
   const toggleTodo = (id: number) => {
-    //@TODO
+    let toggleDoneResult = todoState.map((todo: Itodo) =>
+      todo.id === id ? { ...todo, done: !todo.done } : todo
+    );
+    setTodoState(toggleDoneResult);
   };
 
   const removeTodo = (id: number) => {
@@ -46,6 +50,7 @@ export const useTodo = () => {
   };
 
   const loadData = () => {
+    //localStorage.removeItem('todos')
     let data = localStorage.getItem("todos");
     //if (data === undefined) data = ""; //이건 뭐지, 빈 배열이 아니라 undefined?
     initialTodos = JSON.parse(data); //data!  (???)
