@@ -87,7 +87,7 @@ const TodoItem = ({
   const [isRemoveModalVisible, setRemoveModalVisible] = useState(false); //삭제확인모달
 
   const handleToggle = (id) => toggleTodo(id);
-  const handleRemove = (id) => setRemoveModalVisible(true);
+  const handleRemove = () => setRemoveModalVisible(true);
   return !isEditMode ? (
     <>
       <TodoItemBlock>

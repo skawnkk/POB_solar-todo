@@ -23,7 +23,6 @@ const TodoList = ({
   editTodo,
   todos
 }: TodoListProps) => {
-  console.log("list", todos);
   return (
     <TodoListBlock>
       {todos &&

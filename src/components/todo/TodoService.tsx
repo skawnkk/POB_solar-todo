@@ -1,4 +1,3 @@
-//@typescript-eslint/no-use-before-define
 import { useState, useEffect } from "react";
 
 export type Itodo = {
@@ -62,9 +61,8 @@ export const useTodo = () => {
     //localStorage.removeItem('todos')
     let data = localStorage.getItem("todos");
 
-    if (data === undefined) data = ""; //이건 뭐지, 빈 배열이 아니라 undefined?
-    initialTodos = JSON.parse(data); //data!  (???)
-    console.log("get", initialTodos);
+    if (data === undefined) data = "";
+    initialTodos = JSON.parse(data);
     if (initialTodos && initialTodos.length >= 1) {
       incrementNextId();
     }

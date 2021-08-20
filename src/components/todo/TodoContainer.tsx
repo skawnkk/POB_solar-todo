@@ -15,7 +15,7 @@ const TodoContainer = () => {
     createTodo,
     editTodo
   } = useTodo();
-  console.log("container", todoState);
+
   return (
     <>
       <TodoTemplate>
