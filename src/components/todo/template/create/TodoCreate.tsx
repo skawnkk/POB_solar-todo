@@ -51,6 +51,13 @@ const Input = styled.input`
   }
 `;
 
+const GuideMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  color: orange;
+  height: 10px;
+`;
+
 interface TodoCreateProps {
   nextId: number;
   createTodo: (todo: Itodo) => void;
@@ -65,6 +72,7 @@ const TodoCreate = ({
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [guideMessage, setGuideMessage] = useState("");
   const handleToggle = () => setOpen(!open);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setValue(e.target.value);
@@ -72,7 +80,9 @@ const TodoCreate = ({
   const handleDatePick = (_, dateString) => setDeadline(dateString);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!value || !deadline) return;
+    if (!value) return setGuideMessage("내용을 입력하세요 :)");
+    if (!deadline) return setGuideMessage("날짜를 입력하세요 :)");
+    setGuideMessage("");
     createTodo({
       id: nextId,
       text: value,
@@ -103,6 +113,7 @@ const TodoCreate = ({
             <PlusCircleOutlined />
           </CircleButton>
         </InsertForm>
+        <GuideMessage>{guideMessage}</GuideMessage>
       </InsertFormPositioner>
     </>
   );
