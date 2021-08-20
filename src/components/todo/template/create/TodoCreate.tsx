@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { Itodo } from "components/todo/TodoService";
+import { Itodo } from "../../TodoService";
 import { DatePicker } from "antd";
-import moment from "moment";
+import { disabledDate } from "../../../../util/function";
 
 const CircleButton = styled.button<{ open: boolean }>`
   background: #33bb77;
@@ -65,12 +65,11 @@ const TodoCreate = ({
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const [deadline, setDeadline] = useState("");
-  const disabledDate = (current) => current && current < moment().endOf("day");
   const handleToggle = () => setOpen(!open);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setValue(e.target.value);
 
-  const handleDatePick = (date, dateString) => {
+  const handleDatePick = (_, dateString) => {
     setDeadline(dateString);
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -92,7 +91,6 @@ const TodoCreate = ({
     <>
       <InsertFormPositioner>
         <InsertForm onSubmit={handleSubmit}>
-        
           <Input
             autoFocus
             placeholder="What's need to be done?"

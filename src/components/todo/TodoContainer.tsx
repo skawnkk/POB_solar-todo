@@ -6,16 +6,16 @@ import TodoCreate from "./template/create/TodoCreate";
 import TodoFooter from "./template/footer/TodoFooter";
 
 const TodoContainer = () => {
-  
   const {
     todoState,
     nextIdState,
     incrementNextId,
     toggleTodo,
     removeTodo,
-    createTodo
+    createTodo,
+    editTodo
   } = useTodo();
-  console.log('container', todoState)
+  console.log("container", todoState);
   return (
     <>
       <TodoTemplate>
@@ -28,6 +28,7 @@ const TodoContainer = () => {
         <TodoList
           toggleTodo={toggleTodo}
           removeTodo={removeTodo}
+          editTodo={editTodo}
           todos={todoState}
         />
         <TodoFooter todos={todoState} />

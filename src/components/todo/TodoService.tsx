@@ -1,3 +1,4 @@
+//@typescript-eslint/no-use-before-define
 import { useState, useEffect } from "react";
 
 export type Itodo = {
@@ -49,13 +50,21 @@ export const useTodo = () => {
     );
   };
 
+  const editTodo = (id: number, editedText: string, editedDeadline: string) => {
+    let editedResult = todoState.map((todo: Itodo) =>
+      todo.id === id
+        ? { ...todo, text: editedText, deadline: editedDeadline }
+        : todo
+    );
+    setTodoState(editedResult);
+  };
   const loadData = () => {
     //localStorage.removeItem('todos')
     let data = localStorage.getItem("todos");
 
     if (data === undefined) data = ""; //이건 뭐지, 빈 배열이 아니라 undefined?
     initialTodos = JSON.parse(data); //data!  (???)
-    console.log('get', initialTodos)
+    console.log("get", initialTodos);
     if (initialTodos && initialTodos.length >= 1) {
       incrementNextId();
     }
@@ -66,13 +75,13 @@ export const useTodo = () => {
     localStorage.setItem("todos", JSON.stringify(todoState));
   };
 
-
   return {
     todoState,
     nextIdState,
     incrementNextId,
     toggleTodo,
     removeTodo,
-    createTodo
+    createTodo,
+    editTodo
   };
 };
