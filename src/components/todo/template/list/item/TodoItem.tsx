@@ -1,7 +1,10 @@
+import React, {useState} from "react";
+import styled, { css } from "styled-components";
 import { CheckOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Itodo } from "components/todo/TodoService";
-import React from "react";
-import styled, { css } from "styled-components";
+import TodoModal from "../../TodoModal"
+import { DatePicker } from 'antd';
+import moment from 'moment';
 
 const Remove = styled.div`
   display: flex;
@@ -67,28 +70,31 @@ interface TodoItemProps {
 }
 
 const TodoItem = ({ toggleTodo, removeTodo, todo }: TodoItemProps) => {
+  const [isRemoveModalVisible, setRemoveModalVisible] = useState(false)
+  const [isFixDeadline, setFixDeadline] = useState(false)
   const { id, text, done, deadline } = todo;
-  const handleToggle = (id) => {
-    toggleTodo(id);
-  };
-
-  const handleRemove = (id) => {
-    removeTodo(id)
-  };
-
+  const handleToggle = (id) => toggleTodo(id);
+  const handleRemove = (id) => setRemoveModalVisible(true)
+  const handleFixDeadline = () => setFixDeadline(true)
+  const dateFormat = 'YYYY/MM/DD';
   return (
+<>
     <TodoItemBlock>
       <CheckCircle done={done} onClick={() => handleToggle(id)}>
         {done && <CheckOutlined />}
       </CheckCircle>
       <Text done={done}>
         {text}
-        <DeadLine>{deadline}</DeadLine>
+        {isFixDeadline?<><DatePicker defaultValue={moment(deadline, dateFormat)} format={dateFormat}/><button>수정</button></>:
+        <DeadLine onClick={handleFixDeadline}>{deadline}</DeadLine>}
       </Text>
       <Remove onClick={()=>handleRemove(id)}>
         <DeleteOutlined />
       </Remove>
     </TodoItemBlock>
+    {isRemoveModalVisible && <TodoModal todo={todo} removeTodo={removeTodo} isModalVisible={isRemoveModalVisible} setIsModalVisible={setRemoveModalVisible}/>}
+</>
+    
   );
 };
 
