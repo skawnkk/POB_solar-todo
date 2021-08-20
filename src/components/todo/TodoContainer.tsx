@@ -15,7 +15,7 @@ const TodoContainer = () => {
     removeTodo,
     createTodo
   } = useTodo();
-
+  console.log('container', todoState)
   return (
     <>
       <TodoTemplate>

@@ -1,12 +1,11 @@
 import React, {useState} from "react";
 import styled, { css } from "styled-components";
-import { CheckOutlined, DeleteOutlined } from "@ant-design/icons";
+import { CheckOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Itodo } from "components/todo/TodoService";
 import TodoModal from "../../TodoModal"
-import { DatePicker } from 'antd';
-import moment from 'moment';
+import TodoItemEdit from './TodoItemEdit'
 
-const Remove = styled.div`
+const Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,7 +19,7 @@ const TodoItemBlock = styled.div`
   padding-top: 12px;
   padding-bottom: 12px;
   &:hover {
-    ${Remove} {
+    ${Icon} {
       display: initial;
     }
   }
@@ -63,6 +62,12 @@ const DeadLine = styled.div`
   margin-right: 50px;
 `;
 
+const TodoManager = styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+width: 50px;`
+
 interface TodoItemProps {
   toggleTodo: (id: number) => void;
   removeTodo: (id: number) => void;
@@ -70,32 +75,52 @@ interface TodoItemProps {
 }
 
 const TodoItem = ({ toggleTodo, removeTodo, todo }: TodoItemProps) => {
-  const [isRemoveModalVisible, setRemoveModalVisible] = useState(false)
-  const [isFixDeadline, setFixDeadline] = useState(false)
-  const { id, text, done, deadline } = todo;
+  console.log(1,todo)
+  const {id, text, done, deadline } = todo;
+  const [isEditMode, setEditMode] = useState(false) //편집모드 여부
+  const [isRemoveModalVisible, setRemoveModalVisible] = useState(false) //삭제확인모달 
+  
   const handleToggle = (id) => toggleTodo(id);
   const handleRemove = (id) => setRemoveModalVisible(true)
-  const handleFixDeadline = () => setFixDeadline(true)
-  const dateFormat = 'YYYY/MM/DD';
+ 
   return (
-<>
-    <TodoItemBlock>
-      <CheckCircle done={done} onClick={() => handleToggle(id)}>
-        {done && <CheckOutlined />}
-      </CheckCircle>
-      <Text done={done}>
-        {text}
-        {isFixDeadline?<><DatePicker defaultValue={moment(deadline, dateFormat)} format={dateFormat}/><button>수정</button></>:
-        <DeadLine onClick={handleFixDeadline}>{deadline}</DeadLine>}
-      </Text>
-      <Remove onClick={()=>handleRemove(id)}>
-        <DeleteOutlined />
-      </Remove>
-    </TodoItemBlock>
-    {isRemoveModalVisible && <TodoModal todo={todo} removeTodo={removeTodo} isModalVisible={isRemoveModalVisible} setIsModalVisible={setRemoveModalVisible}/>}
-</>
-    
-  );
-};
+      <>
+        <TodoItemBlock>
+          <CheckCircle done={done} onClick={() => handleToggle(id)}>
+            {done && <CheckOutlined />}
+          </CheckCircle>
+          <Text done={done}>
+            <span>{text}</span>
+            <DeadLine>{deadline}</DeadLine>
+          </Text>
+          <TodoManager>
+            <Icon><EditOutlined onClick={()=>setEditMode(true)}/></Icon>
+            <Icon><DeleteOutlined onClick={()=>handleRemove(id)}/></Icon>
+          </TodoManager>
+        </TodoItemBlock>
+        {isRemoveModalVisible && <TodoModal todo={todo} removeTodo={removeTodo} isModalVisible={isRemoveModalVisible} setIsModalVisible={setRemoveModalVisible}/>}
+      </>)
+}
 
 export default React.memo(TodoItem);
+
+
+
+  // return !isEditMode ? (
+  //     <>
+  //       <TodoItemBlock>
+  //         <CheckCircle done={done} onClick={() => handleToggle(id)}>
+  //           {done && <CheckOutlined />}
+  //         </CheckCircle>
+  //         <Text done={done}>
+  //           <span>{text}</span>
+  //           <DeadLine>{deadline}</DeadLine>
+  //         </Text>
+  //         <TodoManager>
+  //           <Icon><EditOutlined onClick={()=>setEditMode(true)}/></Icon>
+  //           <Icon><DeleteOutlined onClick={()=>handleRemove(id)}/></Icon>
+  //         </TodoManager>
+  //       </TodoItemBlock>
+  //       {isRemoveModalVisible && <TodoModal todo={todo} removeTodo={removeTodo} isModalVisible={isRemoveModalVisible} setIsModalVisible={setRemoveModalVisible}/>}
+  //     </>)
+  //     :<TodoItemEdit todo={todo} setEditMode={setEditMode}/>

@@ -17,6 +17,7 @@ interface TodoListProps {
 }
 
 const TodoList = ({ toggleTodo, removeTodo, todos }: TodoListProps) => {
+  console.log('list',todos)
   return (
     <TodoListBlock>
       {todos &&

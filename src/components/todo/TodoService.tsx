@@ -52,8 +52,10 @@ export const useTodo = () => {
   const loadData = () => {
     //localStorage.removeItem('todos')
     let data = localStorage.getItem("todos");
-    //if (data === undefined) data = ""; //이건 뭐지, 빈 배열이 아니라 undefined?
+
+    if (data === undefined) data = ""; //이건 뭐지, 빈 배열이 아니라 undefined?
     initialTodos = JSON.parse(data); //data!  (???)
+    console.log('get', initialTodos)
     if (initialTodos && initialTodos.length >= 1) {
       incrementNextId();
     }
