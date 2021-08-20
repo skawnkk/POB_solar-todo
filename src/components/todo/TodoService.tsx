@@ -10,9 +10,9 @@ export type Itodo = {
 let initialTodos: Itodo[] = [];
 
 export const useTodo = () => {
+  var nextIdState = new Date().getTime();
   const [todoState, setTodoState] = useState(initialTodos);
-
-  var nextIdState = 0;
+  const [newSort, setSort] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -20,7 +20,7 @@ export const useTodo = () => {
 
   useEffect(() => {
     saveData();
-  }, [todoState]);
+  }, [todoState, newSort]);
 
   const incrementNextId = () => {
     nextIdState = nextIdState + 1;
@@ -40,13 +40,7 @@ export const useTodo = () => {
   };
 
   const createTodo = (todo: Itodo) => {
-    const nextId = todoState.length + 1;
-    setTodoState((prevState) =>
-      prevState.concat({
-        ...todo,
-        id: nextId
-      })
-    );
+    setTodoState((prevState) => prevState.concat(todo));
   };
 
   const editTodo = (id: number, editedText: string, editedDeadline: string) => {
@@ -57,20 +51,40 @@ export const useTodo = () => {
     );
     setTodoState(editedResult);
   };
-  const loadData = () => {
-    //localStorage.removeItem('todos')
-    let data = localStorage.getItem("todos");
 
+  const loadData = () => {
+    let data = localStorage.getItem("todos");
     if (data === undefined) data = "";
     initialTodos = JSON.parse(data);
-    if (initialTodos && initialTodos.length >= 1) {
-      incrementNextId();
-    }
+    if (initialTodos && initialTodos.length >= 1) incrementNextId();
     setTodoState(initialTodos);
   };
 
-  const saveData = () => {
+  const saveData = () =>
     localStorage.setItem("todos", JSON.stringify(todoState));
+
+  const dateParsing = (deadline) => {
+    const parsedDate =
+      deadline.split("/").length === 1
+        ? deadline.split("-")
+        : deadline.split("/");
+    const [year, month, date] = parsedDate;
+    const dateValue = new Date(year, month, date);
+    return dateValue.getTime();
+  };
+
+  const sortByDeadLine = () => {
+    const result = todoState.sort(
+      (prev, next) => dateParsing(prev.deadline) - dateParsing(next.deadline)
+    );
+    setTodoState(result);
+    setSort((prev) => !prev);
+  };
+
+  const sortByEnroll = () => {
+    const result = todoState.sort((prev, next) => prev.id - next.id);
+    setTodoState(result);
+    setSort((prev) => !prev);
   };
 
   return {
@@ -80,6 +94,8 @@ export const useTodo = () => {
     toggleTodo,
     removeTodo,
     createTodo,
-    editTodo
+    editTodo,
+    sortByDeadLine,
+    sortByEnroll
   };
 };

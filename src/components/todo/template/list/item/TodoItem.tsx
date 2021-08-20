@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { CheckOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Itodo } from "components/todo/TodoService";
+import { Itodo } from "../../..//TodoService";
 import TodoModal from "../../TodoModal";
 import TodoItemEdit from "./TodoItemEdit";
 
