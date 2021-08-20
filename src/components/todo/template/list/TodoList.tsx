@@ -1,6 +1,7 @@
-import { Itodo } from "components/todo/TodoService";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { OrderedListOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { Itodo } from "components/todo/TodoService";
 import TodoItem from "./item/TodoItem";
 
 const TodoListBlock = styled.div`
@@ -10,6 +11,11 @@ const TodoListBlock = styled.div`
   overflow-y: auto;
 `;
 
+const SortBlock = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100px;
+`;
 interface TodoListProps {
   todos: Itodo[];
   toggleTodo: (id: number) => void;
@@ -23,19 +29,43 @@ const TodoList = ({
   editTodo,
   todos
 }: TodoListProps) => {
+  const [todoList, setTodoList] = useState(todos);
+  const dateParsing = (deadline) => {
+    const [year, month, date] = deadline.split("-");
+    const dateValue = new Date(year, month, date);
+    return dateValue.getTime();
+  };
+
+  const sortByEnroll = () => {
+    const result = todos.sort((prev, next) => prev.id - next.id);
+    setTodoList(result);
+  };
+
+  const sortByDeadLine = () => {
+    const result = todos.sort(
+      (prev, next) => dateParsing(prev.deadline) - dateParsing(next.deadline)
+    );
+    setTodoList(result);
+  };
   return (
-    <TodoListBlock>
-      {todos &&
-        todos.map((todo) => (
-          <TodoItem
-            toggleTodo={toggleTodo}
-            removeTodo={removeTodo}
-            editTodo={editTodo}
-            key={todo.id}
-            todo={todo}
-          />
-        ))}
-    </TodoListBlock>
+    <>
+      <SortBlock>
+        <OrderedListOutlined onClick={sortByEnroll} />
+        <UnorderedListOutlined onClick={sortByDeadLine} />
+      </SortBlock>
+      <TodoListBlock>
+        {todoList &&
+          todos.map((todo) => (
+            <TodoItem
+              toggleTodo={toggleTodo}
+              removeTodo={removeTodo}
+              editTodo={editTodo}
+              key={todo.id}
+              todo={todo}
+            />
+          ))}
+      </TodoListBlock>
+    </>
   );
 };
 

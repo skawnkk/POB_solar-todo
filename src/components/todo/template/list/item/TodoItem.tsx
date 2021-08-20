@@ -5,12 +5,20 @@ import { Itodo } from "components/todo/TodoService";
 import TodoModal from "../../TodoModal";
 import TodoItemEdit from "./TodoItemEdit";
 
-const Icon = styled.div`
+const DeleteIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   color: #119955;
   font-size: 16px;
+`;
+
+const EditIcon = styled(DeleteIcon)<{ done: boolean }>`
+  ${(props) =>
+    props.done &&
+    css`
+      visibility: hidden;
+    `}
 `;
 
 const TodoItemBlock = styled.div`
@@ -19,7 +27,10 @@ const TodoItemBlock = styled.div`
   padding-top: 12px;
   padding-bottom: 12px;
   &:hover {
-    ${Icon} {
+    ${DeleteIcon} {
+      display: initial;
+    }
+    ${EditIcon} {
       display: initial;
     }
   }
@@ -99,12 +110,13 @@ const TodoItem = ({
           <DeadLine>{deadline}</DeadLine>
         </Text>
         <TodoManager>
-          <Icon>
+          <EditIcon done={done}>
             <EditOutlined onClick={() => setEditMode(true)} />
-          </Icon>
-          <Icon>
-            <DeleteOutlined onClick={() => handleRemove(id)} />
-          </Icon>
+          </EditIcon>
+
+          <DeleteIcon>
+            <DeleteOutlined onClick={() => handleRemove()} />
+          </DeleteIcon>
         </TodoManager>
       </TodoItemBlock>
       {isRemoveModalVisible && (
