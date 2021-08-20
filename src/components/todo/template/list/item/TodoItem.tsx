@@ -1,14 +1,24 @@
-import { CheckOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Itodo } from "components/todo/TodoService";
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
+import { CheckOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Itodo } from "../../..//TodoService";
+import TodoModal from "../../TodoModal";
+import TodoItemEdit from "./TodoItemEdit";
 
-const Remove = styled.div`
+const DeleteIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   color: #119955;
   font-size: 16px;
+`;
+
+const EditIcon = styled(DeleteIcon)<{ done: boolean }>`
+  ${(props) =>
+    props.done &&
+    css`
+      visibility: hidden;
+    `}
 `;
 
 const TodoItemBlock = styled.div`
@@ -17,7 +27,10 @@ const TodoItemBlock = styled.div`
   padding-top: 12px;
   padding-bottom: 12px;
   &:hover {
-    ${Remove} {
+    ${DeleteIcon} {
+      display: initial;
+    }
+    ${EditIcon} {
       display: initial;
     }
   }
@@ -60,33 +73,63 @@ const DeadLine = styled.div`
   margin-right: 50px;
 `;
 
+const TodoManager = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50px;
+`;
+
 interface TodoItemProps {
   toggleTodo: (id: number) => void;
   removeTodo: (id: number) => void;
+  editTodo: (id: number, editedText: string, editedDeadline: string) => void;
   todo: Itodo;
 }
 
-const TodoItem = ({ toggleTodo, removeTodo, todo }: TodoItemProps) => {
-  const { done } = todo;
-  const handleToggle = (id) => {
-    toggleTodo(id);
-  };
+const TodoItem = ({
+  toggleTodo,
+  removeTodo,
+  editTodo,
+  todo
+}: TodoItemProps) => {
+  const { id, text, done, deadline } = todo;
+  const [isEditMode, setEditMode] = useState(false); //편집모드 여부
+  const [isRemoveModalVisible, setRemoveModalVisible] = useState(false); //삭제확인모달
 
-  const handleRemove = () => {};
+  const handleToggle = (id) => toggleTodo(id);
+  const handleRemove = () => setRemoveModalVisible(true);
+  return !isEditMode ? (
+    <>
+      <TodoItemBlock>
+        <CheckCircle done={done} onClick={() => handleToggle(id)}>
+          {done && <CheckOutlined />}
+        </CheckCircle>
+        <Text done={done}>
+          <span>{text}</span>
+          <DeadLine>{deadline}</DeadLine>
+        </Text>
+        <TodoManager>
+          <EditIcon done={done}>
+            <EditOutlined onClick={() => setEditMode(true)} />
+          </EditIcon>
 
-  return (
-    <TodoItemBlock>
-      <CheckCircle done={done} onClick={() => handleToggle(todo.id)}>
-        {done && <CheckOutlined />}
-      </CheckCircle>
-      <Text done={done}>
-        {todo.text}
-        <DeadLine>{todo.deadline}</DeadLine>
-      </Text>
-      <Remove onClick={handleRemove}>
-        <DeleteOutlined />
-      </Remove>
-    </TodoItemBlock>
+          <DeleteIcon>
+            <DeleteOutlined onClick={() => handleRemove()} />
+          </DeleteIcon>
+        </TodoManager>
+      </TodoItemBlock>
+      {isRemoveModalVisible && (
+        <TodoModal
+          todo={todo}
+          removeTodo={removeTodo}
+          isModalVisible={isRemoveModalVisible}
+          setIsModalVisible={setRemoveModalVisible}
+        />
+      )}
+    </>
+  ) : (
+    <TodoItemEdit todo={todo} editTodo={editTodo} setEditMode={setEditMode} />
   );
 };
 

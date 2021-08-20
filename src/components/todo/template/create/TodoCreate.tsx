@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Itodo } from "../../../todo/TodoService";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { Itodo } from "components/todo/TodoService";
+import { disabledDate } from "../../../../util/function";
 import { DatePicker } from "antd";
-import moment from "moment";
 
-const CircleButton = styled.button<{ open: boolean }>`
+const CircleButton = styled.button`
   background: #33bb77;
   width: 50px;
   height: 50px;
@@ -65,14 +65,11 @@ const TodoCreate = ({
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const [deadline, setDeadline] = useState("");
-  const disabledDate = (current) => current && current < moment().endOf("day");
   const handleToggle = () => setOpen(!open);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setValue(e.target.value);
 
-  const handleDatePick = (date, dateString) => {
-    setDeadline(dateString);
-  };
+  const handleDatePick = (_, dateString) => setDeadline(dateString);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!value || !deadline) return;
@@ -82,10 +79,8 @@ const TodoCreate = ({
       done: false,
       deadline
     });
-    incrementNextId(); // nextId 하나 증가
-
+    incrementNextId();
     setValue("");
-    setOpen(false); // open 닫기
   };
 
   return (
@@ -104,7 +99,7 @@ const TodoCreate = ({
             disabledDate={disabledDate}
           />
 
-          <CircleButton onClick={handleToggle} open={open}>
+          <CircleButton onClick={handleToggle}>
             <PlusCircleOutlined />
           </CircleButton>
         </InsertForm>

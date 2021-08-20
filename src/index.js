@@ -6,6 +6,7 @@ import App from "./App";
 const GlobalStyle = createGlobalStyle`
   body {
     background: #eeeeee;
+    box-sizing: border-box;
   }
 `;
 
