@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Itodo } from "components/todo/TodoService";
+import { Itodo } from "../../TodoService";
 
 const TodoFooterBlock = styled.div`
   display: flex;
