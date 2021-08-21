@@ -27,10 +27,11 @@ export const useTodo = () => {
   };
 
   const toggleTodo = (id: number) => {
-    let toggleDoneResult = todoState.map((todo: Itodo) =>
-      todo.id === id ? { ...todo, done: !todo.done } : todo
+    setTodoState((prevState) =>
+      prevState.map((todo: Itodo) =>
+        todo.id === id ? { ...todo, done: !todo.done } : todo
+      )
     );
-    setTodoState(toggleDoneResult);
   };
 
   const removeTodo = (id: number) => {
@@ -44,12 +45,13 @@ export const useTodo = () => {
   };
 
   const editTodo = (id: number, editedText: string, editedDeadline: string) => {
-    let editedResult = todoState.map((todo: Itodo) =>
-      todo.id === id
-        ? { ...todo, text: editedText, deadline: editedDeadline }
-        : todo
+    setTodoState((prevState) =>
+      prevState.map((todo: Itodo) =>
+        todo.id === id
+          ? { ...todo, text: editedText, deadline: editedDeadline }
+          : todo
+      )
     );
-    setTodoState(editedResult);
   };
 
   const loadData = () => {
@@ -74,16 +76,18 @@ export const useTodo = () => {
   };
 
   const sortByDeadLine = () => {
-    const result = todoState.sort(
-      (prev, next) => dateParsing(prev.deadline) - dateParsing(next.deadline)
+    setTodoState((prevState) =>
+      prevState.sort(
+        (prev, next) => dateParsing(prev.deadline) - dateParsing(next.deadline)
+      )
     );
-    setTodoState(result);
     setSort((prev) => !prev);
   };
 
   const sortByEnroll = () => {
-    const result = todoState.sort((prev, next) => prev.id - next.id);
-    setTodoState(result);
+    setTodoState((prevState) =>
+      prevState.sort((prev, next) => prev.id - next.id)
+    );
     setSort((prev) => !prev);
   };
 
